@@ -30,5 +30,6 @@
 lib/sqlite/sqlite3
 lib/sqlite/libsqlite3.la
 lib/sqlite/so_locations/
+.sqlite_built_marker
 
 

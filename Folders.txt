@@ -1,0 +1,3 @@
+
+lib - libraries
+./ - main source of the project
