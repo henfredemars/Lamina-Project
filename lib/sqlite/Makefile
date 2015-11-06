@@ -17,7 +17,7 @@
 
 
 
-
+CFLAGS="-O2"
 
 am__make_dryrun = \
   { \
