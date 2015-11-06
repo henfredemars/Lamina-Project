@@ -22,5 +22,5 @@ DatabaseTest.o: DatabaseTest.cpp
 
 clean:
 	rm -f *.o;
-	rm -f *.bin;
+	rm -f *.bin *.db;
 
