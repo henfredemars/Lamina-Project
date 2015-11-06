@@ -29,6 +29,7 @@
 *.app
 
 lib/sqlite/sqlite3
+lib/sqlite/.libs
 lib/sqlite/config.log
 lib/sqlite/config.status
 lib/sqlite/libtool
