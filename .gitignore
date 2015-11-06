@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+*.bin
 
 # Precompiled Headers
 *.gch
@@ -28,6 +29,9 @@
 *.app
 
 lib/sqlite/sqlite3
+lib/sqlite/config.log
+lib/sqlite/config.status
+lib/sqlite/libtool
 lib/sqlite/libsqlite3.la
 lib/sqlite/so_locations/
 .sqlite_built_marker

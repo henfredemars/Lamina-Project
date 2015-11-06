@@ -30,6 +30,7 @@ Database::~Database() {
 	} else if (status!=SQLITE_OK) {
 	  printf("Database::~Database sqlite3_close returned error code: %d\n",status);
 	}
+	printf("Database closed.\n");
 }
 
 int Database::getMaxGenerationNumber() {
@@ -38,8 +39,10 @@ int Database::getMaxGenerationNumber() {
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&get_max_gen,nullptr);
 	if (status!=SQLITE_OK) printf("Database::getMaxGenerationNumber sqlite3_prepare_v2 returned error code: %d\n",status);
 	status = sqlite3_step(get_max_gen);
-	if (status!=SQLITE_ROW) printf("Database::getMaxGenerationNumber sqlite3_step failed to return expected row\n");
-	int generationNumberMax = sqlite3_column_int(get_max_gen,0);
+	int generationNumberMax;
+	if (status==SQLITE_DONE) generationNumberMax = 0;
+	else if (status!=SQLITE_ROW) printf("Database::getMaxGenerationNumber sqlite3_step failed to return expected row\n");
+	else generationNumberMax = sqlite3_column_int(get_max_gen,0);
 	printf("Database::getMaxGenerationNumber returned: %d\n",generationNumberMax);
 	status = sqlite3_finalize(get_max_gen);
 	get_max_gen = nullptr;
@@ -76,6 +79,7 @@ int Database::countParticlesInGeneration(const int& generationNumber) {
 	status = sqlite3_finalize(count_particles_generation);
 	count_particles_generation = nullptr;
 	if (status!=SQLITE_OK) printf("count_particles_generation - sqlite3 NOT OK after sqlite3_finalize\n");
+	printf("Database::countParticlesInGeneration returning: %d\n",totalParticles);
 	return totalParticles;
 }
 
@@ -102,6 +106,7 @@ std::vector<LaminaParticle> Database::getLaminaParticlesForGeneration(const int&
 	status = sqlite3_finalize(get_lamina_particles_gen);
 	get_lamina_particles_gen = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles_gen - sqlite3 NOT OK after sqlite3_finalize\n");
+	printf("Read %d lamina particle(s) from the database.\n",particles.size());
 	return particles;
 }
 
@@ -126,6 +131,7 @@ std::vector<LaminaParticle> Database::getAllLaminaParticles() {
 	status = sqlite3_finalize(get_lamina_particles);
 	get_lamina_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles - sqlite3 NOT OK after sqlite3_finalize\n");
+	printf("Read %d lamina particle(s) from the database.\n",particles.size());
 	return particles;
 }
 
@@ -151,6 +157,7 @@ std::vector<SourceParticle> Database::getSourceParticles() {
 	status = sqlite3_finalize(get_source_particles);
 	get_source_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_source_particles - sqlite3 NOT OK after sqlite3_finalize\n");
+	printf("Read %d system particle(s).\n",particles.size());
 	return particles;
 }
 
@@ -205,12 +212,13 @@ void Database::insertSourceParticles(const std::vector<SourceParticle>& particle
 	  status = sqlite3_bind_int(insert_particles,6,generation);
 	  if (status!=SQLITE_OK) printf("Database::insertSourceParticles sqlite3_bind_int returned error code: %d\n",status);
 	  status = sqlite3_step(insert_particles);
-	  if (status!=SQLITE_DONE) printf("Database::insertSourceParticles sqlite3_step returned unexpected code %d\n",status);
+	  if (status!=SQLITE_DONE) printf("Database::insertSourceParticles sqlite3_step returned unexpected code: %d\n",status);
 	}
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
 	end_transaction();
+	printf("Wrote %d system particle(s).\n",particles.size());
 }
 
 void Database::insertLaminaParticles(const std::vector<LaminaParticle>& particles,const int& generationNumber) {
@@ -240,12 +248,28 @@ void Database::insertLaminaParticles(const std::vector<LaminaParticle>& particle
 	  status = sqlite3_bind_int(insert_particles,6,generationNumber);
 	  if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_bind_int returned error code: %d\n",status);
 	  status = sqlite3_step(insert_particles);
-	  if (status!=SQLITE_DONE) printf("Database::insertLaminaParticles sqlite3_step returned unexpected code %d\n",status);
+	  if (status!=SQLITE_DONE) printf("Database::insertLaminaParticles sqlite3_step returned unexpected code: %d\n",status);
 	}
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
 	end_transaction();
+	printf("Wrote %d lamina particle(s).\n",particles.size());
+}
+
+void Database::clear() {
+	begin_transaction();
+	sqlite3_stmt* clear;
+	const char* stmt = "delete from particles";
+	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&clear,nullptr);
+	if (status!=SQLITE_OK) printf("Database::clear sqlite3_prepare_v2 returned error code: %d\n",status);
+	status = sqlite3_step(clear);
+	if (status!=SQLITE_DONE) printf("Database::clear sqlite3_step returned unexpected code: %d\n",status);
+	status = sqlite3_finalize(clear);
+	clear = nullptr;
+	if (status!=SQLITE_OK) printf("clear - sqlite3 NOT OK after sqlite3_finalize\n");
+	end_transaction();
+	printf("Database wiped!\n");
 }
 
 
