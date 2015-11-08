@@ -15,6 +15,8 @@ class Database {
 
 public:
 	Database(std::string path);
+	Database(Database&& d);
+	Database& operator=(Database&& d);
 	~Database();
 	int getMaxGenerationNumber();
 	int getTotalParticlesInDB();

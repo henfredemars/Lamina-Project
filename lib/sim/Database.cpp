@@ -23,7 +23,20 @@ Database::Database(std::string path) {
 	if (status!=SQLITE_OK) printf("init_table - sqlite3 NOT OK after sqlite3_finalize\n");
 }
 
+Database::Database(Database&& d) {
+	this->db = d.db;
+	d.db = nullptr;
+}
+
+Database& Database::operator=(Database&& d) {
+	this->~Database();
+	this->db = d.db;
+	d.db = nullptr;
+	return (*this);
+}
+
 Database::~Database() {
+	if (!db) return;
 	int status = sqlite3_close(db);
 	if (status==SQLITE_BUSY) {
 	  printf("Database::~Database WARNING! SQLITE_BUSY on close!\n");
