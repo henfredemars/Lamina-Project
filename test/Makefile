@@ -12,7 +12,7 @@ DatabaseTest.bin: ../lib/sqlite/.libs/libsqlite3.so ../lib/sim/libsim.a Database
 	g++ $(GCC_OPTS) -o DatabaseTest.bin DatabaseTest.o ../lib/sim/libsim.a -L../lib/sqlite/.libs/ -Wl,-rpath=../lib/sqlite/.libs/ -lsqlite3
 
 ../lib/sqlite/.libs/libsqlite3.so:
-	cd ../lib/sqlite;./configure --enable-shared --disable-static --disable-threadsafe; make
+	cd ../lib/sqlite;./configure --enable-shared --disable-static --disable-threadsafe --disable-dynamic-extensions; make
 
 ../lib/sim/libsim.a:
 	make -C ../lib/sim all;

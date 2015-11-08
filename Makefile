@@ -3,7 +3,7 @@
 all: .sqlite_built_marker lib/sim/libsim.a
 
 .sqlite_built_marker:
-	touch .sqlite_built_marker; cd lib/sqlite;./configure --enable-shared --disable-static --disable-threadsafe; make
+	touch .sqlite_built_marker; cd lib/sqlite;./configure --enable-shared --disable-static --disable-threadsafe --disable-dynamic-extensions; make
 
 lib/sim/libsim.a:
 	make -C lib/sim all
