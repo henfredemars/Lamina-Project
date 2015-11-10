@@ -17,7 +17,7 @@
 
 
 
-CFLAGS="-O2"
+
 
 am__make_dryrun = \
   { \
@@ -165,7 +165,7 @@ AWK = gawk
 BUILD_CFLAGS = 
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2
+CFLAGS = -O1
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
@@ -174,7 +174,7 @@ DEPDIR = .deps
 DLLTOOL = false
 DSYMUTIL = 
 DUMPBIN = 
-DYNAMIC_EXTENSION_FLAGS = 
+DYNAMIC_EXTENSION_FLAGS = -DSQLITE_OMIT_LOAD_EXTENSION=1
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
@@ -192,7 +192,7 @@ JSON1_FLAGS =
 LD = /usr/bin/ld
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -ldl 
+LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -274,7 +274,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-AM_CFLAGS = -DSQLITE_THREADSAFE=0    -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_RTREE
+AM_CFLAGS = -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION=1   -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_RTREE
 lib_LTLIBRARIES = libsqlite3.la
 libsqlite3_la_SOURCES = sqlite3.c
 libsqlite3_la_LDFLAGS = -no-undefined -version-info 8:6:8

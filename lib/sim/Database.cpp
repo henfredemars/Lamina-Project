@@ -96,7 +96,7 @@ int Database::countParticlesInGeneration(const int& generationNumber) {
 	return totalParticles;
 }
 
-std::vector<LaminaParticle> Database::getLaminaParticlesForGeneration(const int& generationNumber) {
+Lamina Database::getLaminaParticlesForGeneration(const int& generationNumber) {
 	std::vector<LaminaParticle> particles;
 	sqlite3_stmt* get_lamina_particles_gen;
 	const char* stmt = "select x,y,z from particles where generation=? and type=?";
@@ -120,7 +120,7 @@ std::vector<LaminaParticle> Database::getLaminaParticlesForGeneration(const int&
 	get_lamina_particles_gen = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles_gen - sqlite3 NOT OK after sqlite3_finalize\n");
 	printf("Read %d lamina particle(s) from the database.\n",particles.size());
-	return particles;
+	return Lamina(particles);
 }
 
 std::vector<LaminaParticle> Database::getAllLaminaParticles() {
@@ -148,7 +148,7 @@ std::vector<LaminaParticle> Database::getAllLaminaParticles() {
 	return particles;
 }
 
-std::vector<SourceParticle> Database::getSourceParticles() {
+Source Database::getSourceParticles() {
 	std::vector<SourceParticle> particles;
 	sqlite3_stmt* get_source_particles;
 	const char* stmt = "select x,y,z,q from particles where type=?";
@@ -171,7 +171,7 @@ std::vector<SourceParticle> Database::getSourceParticles() {
 	get_source_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_source_particles - sqlite3 NOT OK after sqlite3_finalize\n");
 	printf("Read %d system particle(s).\n",particles.size());
-	return particles;
+	return Source(particles);
 }
 
 void Database::begin_transaction() {
@@ -198,12 +198,13 @@ void Database::end_transaction() {
 	if (status!=SQLITE_OK) printf("end - sqlite3 NOT OK after sqlite3_finalize\n");
 }
 
-void Database::insertSourceParticles(const std::vector<SourceParticle>& particles) {
+void Database::insertSourceParticles(const Source& source) {
 	begin_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
 	const char* type = "Source";
 	const int generation = 0;
+	const std::vector<SourceParticle> particles = source.asVector();
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&insert_particles,nullptr);
 	if (status!=SQLITE_OK) printf("Database::insertSourceParticles sqlite3_prepare_v2 returned error code: %d\n",status);
 	for (auto iter = particles.begin(); iter!=particles.end(); iter++) {
@@ -234,12 +235,13 @@ void Database::insertSourceParticles(const std::vector<SourceParticle>& particle
 	printf("Wrote %d system particle(s).\n",particles.size());
 }
 
-void Database::insertLaminaParticles(const std::vector<LaminaParticle>& particles,const int& generationNumber) {
+void Database::insertLaminaParticles(const Lamina& lamina,const int& generationNumber) {
 	begin_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
 	const char* type = "Lamina";
 	const int q = 0;
+	const std::vector<LaminaParticle> particles = lamina.asVector();
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&insert_particles,nullptr);
 	if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_prepare_v2 returned error code: %d\n",status);
 	for (auto iter = particles.begin(); iter!=particles.end(); iter++) {
