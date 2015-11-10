@@ -4,6 +4,8 @@
 #include "../lib/sim/include/Database.h"
 #include "../lib/sim/include/SourceParticle.h"
 #include "../lib/sim/include/LaminaParticle.h"
+#include "../lib/sim/include/Source.h"
+#include "../lib/sim/include/Lamina.h"
 
 int main(int argc, char** argv) {
 	//Initialize
@@ -20,22 +22,22 @@ int main(int argc, char** argv) {
 	assert(db.getMaxGenerationNumber() == 0);
 
 	//Insert source particle
-	db.insertSourceParticles(v_s);
+	db.insertSourceParticles(Source(v_s));
 
 	//Check post conditions
 	assert(db.getTotalParticlesInDB() == 1);
 
 	//Insert lamina particles
-	db.insertLaminaParticles(v_l,1);
+	db.insertLaminaParticles(Lamina(v_l),1);
 
 	//Check post conditions
 	assert(db.getTotalParticlesInDB() == 3);
 	assert(db.getMaxGenerationNumber() == 1);
 
 	//Check particles were correctly inserted
-	std::vector<SourceParticle> v_s_p = db.getSourceParticles();
-	std::vector<LaminaParticle> v_l_p = db.getAllLaminaParticles();
-	std::vector<LaminaParticle> v_l_p1 = db.getLaminaParticlesForGeneration(1);
+	const std::vector<SourceParticle> v_s_p = (db.getSourceParticles()).asVector();
+	const std::vector<LaminaParticle> v_l_p = db.getAllLaminaParticles();
+	const std::vector<LaminaParticle> v_l_p1 = (db.getLaminaParticlesForGeneration(1)).asVector();
 	assert(v_s_p.size()==1);
 	SourceParticle sp = v_s_p.at(0);
 	assert(sp.getX() == 1.1 && sp.getY() == -2.2 && sp.getZ() == 3.3 && sp.getQ() == 4.4);

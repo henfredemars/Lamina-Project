@@ -10,6 +10,8 @@
 #include "../../sqlite/sqlite3.h"
 #include "LaminaParticle.h"
 #include "SourceParticle.h"
+#include "Lamina.h"
+#include "Source.h"
 
 class Database {
 
@@ -21,11 +23,11 @@ public:
 	int getMaxGenerationNumber();
 	int getTotalParticlesInDB();
 	int countParticlesInGeneration(const int& generationNumber);
-	std::vector<LaminaParticle> getLaminaParticlesForGeneration(const int& generationNumber);
+	Lamina getLaminaParticlesForGeneration(const int& generationNumber);
 	std::vector<LaminaParticle> getAllLaminaParticles();
-	std::vector<SourceParticle> getSourceParticles();
-	void insertSourceParticles(const std::vector<SourceParticle>& particles);
-	void insertLaminaParticles(const std::vector<LaminaParticle>& particles,const int& generationNumber);
+	Source getSourceParticles();
+	void insertSourceParticles(const Source& source);
+	void insertLaminaParticles(const Lamina& lamina,const int& generationNumber);
 	void clear();
 private:
 	sqlite3* db;

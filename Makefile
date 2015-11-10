@@ -1,5 +1,7 @@
 #Makefile for Lamina-Project
 
+export CFLAGS = -O1
+
 all: .sqlite_built_marker lib/sim/libsim.a
 
 .sqlite_built_marker:
