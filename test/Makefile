@@ -24,3 +24,4 @@ clean:
 	rm -f *.o;
 	rm -f *.bin *.db;
 
+.PHONY: ../lib/sim/libsim.a
