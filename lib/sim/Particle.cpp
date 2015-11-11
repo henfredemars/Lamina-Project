@@ -35,11 +35,11 @@ double Particle::getRadius() const {
 	return 1;
 }
 
-double Particle::distanceTo(const Particle& p) const {
+double Particle::distanceToSquared(const Particle& p) const {
 	double xd = p.x-x;
 	double yd = p.y-y;
 	double zd = p.z-z;
-	return sqrt(xd*xd + yd*yd + zd*zd);
+	return xd*xd + yd*yd + zd*zd;
 }
 
 

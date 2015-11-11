@@ -5,7 +5,7 @@ GCC_OPTS := -std=c++11 $(CFLAGS) -flto -Wall
 
 all: libsim.a
 
-libsim.a: Database.o Particle.o SourceParticle.o LaminaParticle.o Lamina.o Source.o
+libsim.a: Database.o Particle.o SourceParticle.o LaminaParticle.o Lamina.o Source.o Models.o
 	ar rcs libsim.a *.o
 #-Wl,-rpath=../sqlite/.libs/ -L../sqlite/.libs -lsqlite3
 
@@ -20,6 +20,9 @@ Lamina.o: include/Lamina.h Lamina.cpp
 
 Source.o: include/Source.h Source.cpp
 	g++ $(GCC_OPTS) -c Source.cpp -o Source.o
+
+Models.o: include/Models.h Models.cpp
+	g++ $(GCC_OPTS) -c Models.cpp -o Models.o
 
 SourceParticle.o: include/Particle.h include/SourceParticle.h SourceParticle.cpp
 	g++ $(GCC_OPTS) -c SourceParticle.cpp -o SourceParticle.o

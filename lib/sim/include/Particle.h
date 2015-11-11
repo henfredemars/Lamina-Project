@@ -3,8 +3,6 @@
 #ifndef __PARTICLE_H
 #define __PARTICLE_H
 
-#include <cmath>
-
 class Particle {
 
 public:
@@ -16,7 +14,7 @@ public:
 	void setY(double y);
 	void setZ(double z);
 	virtual double getRadius() const;
-	double distanceTo(const Particle& p) const;
+	double distanceToSquared(const Particle& p) const;
 protected:
 	double x;
 	double y;
