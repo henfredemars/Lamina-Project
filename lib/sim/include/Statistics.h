@@ -8,6 +8,7 @@
 
 class Statistics {
 public:
+	Statistics() = delete;
 	static double computeNova(....
 };
 
