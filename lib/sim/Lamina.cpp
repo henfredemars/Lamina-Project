@@ -28,7 +28,7 @@ Lamina Lamina::factoryFibSphereLamina(const Eigen::Vector3d& origin,
           double phi = (i % numberOfPoints)*inc;
           double x = cos(phi)*r;
           double z = sin(phi)*r;
-	  points.emplace_back(x+origin(0),y+origin(1),z+origin(2));
+	  points.emplace_back(x*radius+origin(0),y*radius+origin(1),z*radius+origin(2));
 	}
 	return Lamina(points);
 }
