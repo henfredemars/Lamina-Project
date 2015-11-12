@@ -24,21 +24,21 @@
 #ifndef TCLAP_CMDLINE_H
 #define TCLAP_CMDLINE_H
 
-#include <./SwitchArg.h>
-#include <./MultiSwitchArg.h>
-#include <./UnlabeledValueArg.h>
-#include <./UnlabeledMultiArg.h>
+#include "./SwitchArg.h"
+#include "./MultiSwitchArg.h"
+#include "./UnlabeledValueArg.h"
+#include "./UnlabeledMultiArg.h"
 
-#include <./XorHandler.h>
-#include <./HelpVisitor.h>
-#include <./VersionVisitor.h>
-#include <./IgnoreRestVisitor.h>
+#include "./XorHandler.h"
+#include "./HelpVisitor.h"
+#include "./VersionVisitor.h"
+#include "./IgnoreRestVisitor.h"
 
-#include <./CmdLineOutput.h>
-#include <./StdOutput.h>
+#include "./CmdLineOutput.h"
+#include "./StdOutput.h"
 
-#include <./Constraint.h>
-#include <./ValuesConstraint.h>
+#include "./Constraint.h"
+#include "./ValuesConstraint.h"
 
 #include <string>
 #include <vector>

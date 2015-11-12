@@ -26,8 +26,8 @@
 #include <string>
 #include <vector>
 
-#include <./Arg.h>
-#include <./Constraint.h>
+#include "./Arg.h"
+#include "./Constraint.h"
 
 namespace TCLAP {
 
