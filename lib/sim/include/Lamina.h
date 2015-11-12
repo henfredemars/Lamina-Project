@@ -4,12 +4,15 @@
 #ifndef __LAMINA_H
 #define __LAMINA_H
 
+#include <cmath>
 #include <vector>
 #include <random>
 #include <unordered_set>
 #include "LaminaParticle.h"
 #include "Vector3dHash.h"
 #include "../../eigen/Dense"
+
+#define PI 3.14159265358979323846
 
 class Lamina {
 public:
@@ -18,6 +21,9 @@ public:
 	const std::vector<LaminaParticle>& asVector() const;
 	void addParticle(const LaminaParticle& laminaParticle);
 	static Lamina factorySphereLamina(const Eigen::Vector3d& origin,
+					const double& radius,
+					const int& numberOfPoints);
+	static Lamina factoryFibSphereLamina(const Eigen::Vector3d& origin,
 					const double& radius,
 					const int& numberOfPoints);
 private:

@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-#include <./SwitchArg.h>
+#include "./SwitchArg.h"
 
 namespace TCLAP {
 
