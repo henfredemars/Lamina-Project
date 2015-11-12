@@ -20,8 +20,6 @@ public:
 	static Lamina factorySphereLamina(const Eigen::Vector3d& origin,
 					const double& radius,
 					const int& numberOfPoints);
-	static Lamina factoryPlaneLamina(const Eigen::Vector3d& normalVector,
-					const Eigen::Vector3d& transVector);
 private:
 	std::vector<LaminaParticle> lamina;
 	static std::vector<Eigen::Vector3d> closestPoints(const std::unordered_set<Eigen::Vector3d,Vector3dHash>& points);
