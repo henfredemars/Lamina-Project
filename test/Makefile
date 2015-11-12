@@ -1,7 +1,7 @@
 
 #Makefile
 
-GCC_OPTS := -std=c++11 -O2 -Wall -flto
+GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto
 
 all: DatabaseTest.bin
 
