@@ -64,10 +64,4 @@ std::vector<Eigen::Vector3d> Lamina::closestPoints(const std::unordered_set<Eige
 	return minPair;
 }
 
-Lamina Lamina::factoryPlaneLamina(const Eigen::Vector3d& normalVector,
-                                        const Eigen::Vector3d& transVector) {
-	assert(false);
-	return Lamina();
-}
-
 
