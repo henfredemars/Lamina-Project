@@ -33,6 +33,7 @@ private:
 	sqlite3* db;
 	void begin_transaction();
 	void end_transaction();
+	void vacuum();
 };
 
 #endif /* __DATABASE_H */

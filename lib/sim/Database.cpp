@@ -272,6 +272,18 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 	printf("Wrote %d lamina particle(s).\n",particles.size());
 }
 
+void Database::vacuum() {
+	sqlite3_stmt* vacuum;
+	const char* stmt = "vacuum";
+	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&vacuum,nullptr);
+	if (status!=SQLITE_OK) printf("Database::vacuum sqlite3_prepare_v2 returned error code: %d\n",status);
+	status = sqlite3_step(vacuum);
+	if (status!=SQLITE_DONE) printf("Database::vacuum sqlite3_step returned unexpected code: %d\n",status);
+	status = sqlite3_finalize(vacuum);
+	vacuum = nullptr;
+	if (status!=SQLITE_OK) printf("vacuum - sqlite3 NOT OK after sqlite3_finalize\n");
+}
+
 void Database::clear() {
 	begin_transaction();
 	sqlite3_stmt* clear;
@@ -283,8 +295,8 @@ void Database::clear() {
 	status = sqlite3_finalize(clear);
 	clear = nullptr;
 	if (status!=SQLITE_OK) printf("clear - sqlite3 NOT OK after sqlite3_finalize\n");
+	vacuum();
 	end_transaction();
 	printf("Database wiped!\n");
 }
-
 
