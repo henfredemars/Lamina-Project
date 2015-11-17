@@ -11,7 +11,9 @@
 
 class AnnealingSimulation : public Simulation {
 public:
-	AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,const int& numGens);
+	AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,
+                const int& numGens,const double& alpha,const int& maxStepTime,const double& startingTemperature,
+                const double& endingTemperature);
 	virtual bool step();
 protected:
 	int numGens;
