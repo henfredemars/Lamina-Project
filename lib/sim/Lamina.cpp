@@ -46,8 +46,9 @@ double Lamina::squaredError(const Source& s, const double& targetField) const {
 }
 
 double Lamina::spacingBadnessFactor() const {
-	double minDist = smallestGapSize();
-	double maxDist = largestGapSize();
+	std::vector<double> gaps = gapSizes();
+	double minDist = *std::min_element(gaps.begin(),gaps.end());
+	double maxDist = *std::max_element(gaps.begin(),gaps.end());
 	return (maxDist/minDist)-1; //0 is perfect, smaller is better
 }
 
@@ -142,6 +143,15 @@ LaminaParticle Lamina::closestPointTo(const LaminaParticle& p) const {
 	  }
 	}
 	return closest;
+}
+
+std::vector<double> Lamina::gapSizes() const {
+	std::vector<double> gaps;
+	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
+	  LaminaParticle closest = closestPointTo(*iter);
+	  gaps.push_back(closest.distanceTo(*iter));
+	}
+	return gaps;
 }
 
 double Lamina::smallestGapSize() const {

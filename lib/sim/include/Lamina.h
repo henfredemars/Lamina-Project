@@ -4,6 +4,7 @@
 #ifndef __LAMINA_H
 #define __LAMINA_H
 
+#include <algorithm>
 #include <cmath>
 #include <cassert>
 #include <vector>
@@ -36,6 +37,7 @@ public:
 private:
 	std::vector<LaminaParticle> lamina;
 	LaminaParticle closestPointTo(const LaminaParticle& p) const;
+	std::vector<double> gapSizes() const;
 	double smallestGapSize() const;
 	double largestGapSize() const;
 	static std::vector<Eigen::Vector3d> closestPoints(const std::unordered_set<Eigen::Vector3d,Vector3dHash>& points);
