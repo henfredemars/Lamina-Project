@@ -5,6 +5,7 @@
 #define __LAMINA_H
 
 #include <cmath>
+#include <cassert>
 #include <vector>
 #include <random>
 #include <unordered_set>
@@ -20,6 +21,8 @@ public:
 	Lamina(const std::vector<LaminaParticle>& v);
 	const std::vector<LaminaParticle>& asVector() const;
 	void addParticle(const LaminaParticle& laminaParticle);
+	double spacingBadnessFactor() const;
+	Eigen::Vector3d centerOfMass() const;
 	static Lamina factorySphereLamina(const Eigen::Vector3d& origin,
 					const double& radius,
 					const int& numberOfPoints);
@@ -28,6 +31,9 @@ public:
 					const int& numberOfPoints);
 private:
 	std::vector<LaminaParticle> lamina;
+	LaminaParticle closestPointTo(const LaminaParticle& p) const;
+	double smallestGapSize() const;
+	double largestGapSize() const;
 	static std::vector<Eigen::Vector3d> closestPoints(const std::unordered_set<Eigen::Vector3d,Vector3dHash>& points);
 };
 

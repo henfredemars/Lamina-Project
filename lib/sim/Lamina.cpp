@@ -17,6 +17,27 @@ void Lamina::addParticle(const LaminaParticle& laminaParticle) {
 	lamina.push_back(laminaParticle);
 }
 
+double Lamina::spacingBadnessFactor() const {
+	double minDist = smallestGapSize();
+	double maxDist = largestGapSize();
+	return (maxDist/minDist)-1; //0 is perfect, smaller is better
+}
+
+Eigen::Vector3d Lamina::centerOfMass() const {
+	double mean_x = 0;
+	double mean_y = 0;
+	double mean_z = 0;
+	for (auto iter = lamina.begin(), end = lamina.end(); iter!=end; iter++) {
+	  const LaminaParticle& p = *iter;
+	  mean_x += p.getX();
+	  mean_y += p.getY();
+	  mean_z += p.getZ();
+	}
+	int size = (int)lamina.size();
+	assert(size && "Lamina is empty");
+	return Eigen::Vector3d(mean_x/size,mean_y/size,mean_z/size);
+}
+
 Lamina Lamina::factoryFibSphereLamina(const Eigen::Vector3d& origin,
 					const double& radius, const int& numberOfPoints) {
 	std::vector<LaminaParticle> points;
@@ -80,4 +101,42 @@ std::vector<Eigen::Vector3d> Lamina::closestPoints(const std::unordered_set<Eige
 	return minPair;
 }
 
+LaminaParticle Lamina::closestPointTo(const LaminaParticle& p) const {
+	LaminaParticle closest;
+	double minDist = std::numeric_limits<double>::infinity();
+	assert(lamina.size()>1 && "Lamina too small to define closest point");
+	for (auto iter = lamina.begin(), end = lamina.end(); iter!=end; iter++) {
+	  if (p==(*iter)) continue;
+	  double distance = p.distanceTo(*iter);
+	  if (distance <= minDist) {
+	    closest = *iter;
+	    minDist = distance;
+	  }
+	}
+	return closest;
+}
+
+double Lamina::smallestGapSize() const {
+	double minSize = std::numeric_limits<double>::infinity();
+	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
+	  LaminaParticle closest = closestPointTo(*iter);
+	  double distance = closest.distanceTo(*iter);
+	  if (distance <= minSize) {
+	    minSize = distance;
+	  }
+	}
+	return minSize;
+}
+
+double Lamina::largestGapSize() const {
+	double maxSize = 0;
+	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
+	  LaminaParticle closest = closestPointTo(*iter);
+	  double distance = closest.distanceTo(*iter);
+	  if (distance >= maxSize) {
+	    maxSize = distance;
+	  }
+	}
+	return maxSize;
+}
 

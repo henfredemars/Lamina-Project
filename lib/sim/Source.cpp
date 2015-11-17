@@ -1,6 +1,5 @@
 
 #include "include/Source.h"
-#include <stdio.h>
 
 Source::Source() {
 	//Do nothing
@@ -27,6 +26,45 @@ void Source::addNormalNoise(const double& sigma) {
 	  p.setY(p.getY()+distribution(engine));
 	  p.setZ(p.getZ()+distribution(engine));
 	}
+}
+
+double Source::totalCharge() const {
+        double charge = 0;
+        for (auto iter = source.begin(), end = source.end(); iter!=end; iter++) {
+          charge += (*iter).getQ();
+	}
+	return charge;
+}
+
+Eigen::Vector3d Source::centerOfCharge() const {
+        double mean_x = 0;
+        double mean_y = 0;
+        double mean_z = 0;
+	assert(source.size() && "Source is empty");
+	double charge = totalCharge();
+        for (auto iter = source.begin(), end = source.end(); iter!=end; iter++) {
+          const SourceParticle& p = *iter;
+	  double w_c = p.getQ()/charge;
+          mean_x += p.getX()*w_c;
+          mean_y += p.getY()*w_c;
+          mean_z += p.getZ()*w_c;
+        }
+        return Eigen::Vector3d(mean_x,mean_y,mean_z);
+}
+
+Eigen::Vector3d Source::centerOfMass() const {
+        double mean_x = 0;
+        double mean_y = 0;
+        double mean_z = 0;
+        for (auto iter = source.begin(), end = source.end(); iter!=end; iter++) {
+          const SourceParticle& p = *iter;
+          mean_x += p.getX();
+          mean_y += p.getY();
+          mean_z += p.getZ();
+        }
+        int size = (int)source.size();
+	assert(size && "Source is empty");
+        return Eigen::Vector3d(mean_x/size,mean_y/size,mean_z/size);
 }
 
 Source Source::pointSource() {

@@ -7,6 +7,7 @@
 
 class SourceParticle : public Particle {
 public:
+	SourceParticle();
 	SourceParticle(double x,double y,double z,double q);
 	virtual double getRadius() const;
 	double getQ() const;
