@@ -1,6 +1,9 @@
 
 #include "include/GeneticAlgorithm.h"
 
+//Static member fields
+std::default_random_engine GeneticAlgorithm::engine;
+
 /*================================Individual================================*/
 Individual::Individual(const Lamina& l,const double& fitness) {
 	this->lamina = l;

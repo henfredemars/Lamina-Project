@@ -1,6 +1,8 @@
 
 #include "include/AnnealingSimulation.h"
 
+std::default_random_engine AnnealingSimulation::engine;
+
 AnnealingSimulation::AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,
 		const int& numGens,const double& alpha,const int& maxStepTime,const double& startingTemperature,
 		const double& endingTemperature) :

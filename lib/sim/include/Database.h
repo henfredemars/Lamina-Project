@@ -28,6 +28,7 @@ public:
 	Source getSourceParticles();
 	void insertSourceParticles(const Source& source);
 	void insertLaminaParticles(const Lamina& lamina,const int& generationNumber);
+	void insertFitnessLog(const std::vector<double>& v);
 	void clear();
 private:
 	sqlite3* db;
