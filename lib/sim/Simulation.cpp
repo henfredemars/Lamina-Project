@@ -23,4 +23,11 @@ const Source& Simulation::getSource() const {
 	return source;
 }
 
+int Simulation::getGeneration() const {
+	return generationNumber;
+}
+
+const std::vector<double>& Simulation::getFitnessLog() const {
+	return fitnessLog;
+}
 

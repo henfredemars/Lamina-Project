@@ -20,6 +20,8 @@ public:
 	const SimType& getMode() const;
 	const Lamina& getLamina() const;
 	const Source& getSource() const;
+	int getGeneration() const;
+	const std::vector<double>& getFitnessLog() const;
 	virtual bool step() = 0;
 protected:
 	int generationNumber;

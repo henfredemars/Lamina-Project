@@ -4,13 +4,19 @@ export CFLAGS = -O1
 
 GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto
 
-all: .sqlite_built_marker lib/sim/libsim.a generator
+all: .sqlite_built_marker lib/sim/libsim.a generator simulator
 
 generator: .sqlite_built_marker lib/sim/libsim.a Generator.o
 	g++ $(GCC_OPTS) -o Generator.bin Generator.o lib/sim/libsim.a -Llib/sqlite/.libs/ -Wl,-rpath=lib/sqlite/.libs/ -lsqlite3
 
+simulator: .sqlite_built_marker lib/sim/libsim.a Simulator.o
+	g++ $(GCC_OPTS) -o Simulator.bin Simulator.o lib/sim/libsim.a -Llib/sqlite/.libs/ -Wl,-rpath=lib/sqlite/.libs/ -lsqlite3
+
 Generator.o: Generator.cpp
 	g++ $(GCC_OPTS) -c Generator.cpp -o Generator.o
+
+Simulator.o: Simulator.cpp
+	g++ $(GCC_OPTS) -c Simulator.cpp -o Simulator.o
 
 .sqlite_built_marker:
 	touch .sqlite_built_marker; cd lib/sqlite;./configure --enable-shared --disable-static --disable-threadsafe --disable-dynamic-extensions; make

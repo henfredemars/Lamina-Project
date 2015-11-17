@@ -11,16 +11,27 @@ Database::Database(std::string path) {
 	  }
 	}
 	sqlite3_stmt* init_ptable;
-	const char* stmt = "create table if not exists particles(x real, y real, z real, q real, type text, generation integer)";
-	status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&init_ptable,nullptr);
+	sqlite3_stmt* init_ftable;
+	const char* stmt0 = "create table if not exists particles(x real, y real, z real, q real, type text, generation integer)";
+	const char* stmt1 = "create table if not exists fitness(f real)";
+	status = sqlite3_prepare_v2(db,stmt0,std::strlen(stmt0),&init_ptable,nullptr);
 	if (status!=SQLITE_OK) {
 	  printf("Database::Database sqlite3_prepare_v2 returned error code: %d\n",status);
 	}
+	status = sqlite3_prepare_v2(db,stmt1,std::strlen(stmt1),&init_ftable,nullptr);
+	if (status!=SQLITE_OK) {
+          printf("Database::Database sqlite3_prepare_v2 returned error code: %d\n",status);
+        }
 	status = sqlite3_step(init_ptable);
 	if (status!=SQLITE_DONE) printf("init_ptable - sqlite3_step returned error code: %d\n",status);
+	status = sqlite3_step(init_ftable);
+	if (status!=SQLITE_DONE) printf("init_ftable - sqlite3_step returned error code: %d\n",status);
 	status = sqlite3_finalize(init_ptable);
 	init_ptable = nullptr;
-	if (status!=SQLITE_OK) printf("init_table - sqlite3 NOT OK after sqlite3_finalize\n");
+	if (status!=SQLITE_OK) printf("init_ptable - sqlite3 NOT OK after sqlite3_finalize\n");
+	status = sqlite3_finalize(init_ftable);
+	init_ftable = nullptr;
+	if (status!=SQLITE_OK) printf("init_ftable - sqlite3 NOT OK after sqlite3_finalize\n");
 }
 
 Database::Database(Database&& d) {
@@ -257,7 +268,7 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 	  status = sqlite3_bind_double(insert_particles,3,particle.getZ());
 	  if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_bind_double returned error code: %d\n",status);
 	  status = sqlite3_bind_double(insert_particles,4,q);
-	  if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_bind_dbouel returned error code: %d\n",status);
+	  if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_bind_double returned error code: %d\n",status);
 	  status = sqlite3_bind_text(insert_particles,5,type,std::strlen(type),SQLITE_STATIC);
 	  if (status!=SQLITE_OK) printf("Database::insertLaminaParticles sqlite3_bind_text returned error code: %d\n",status);
 	  status = sqlite3_bind_int(insert_particles,6,generationNumber);
@@ -270,6 +281,29 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
 	end_transaction();
 	printf("Wrote %d lamina particle(s).\n",particles.size());
+}
+
+void Database::insertFitnessLog(const std::vector<double>& v) {
+	begin_transaction();
+	sqlite3_stmt* fitness;
+	const char* stmt = "insert into fitness values(?)";
+	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&fitness,nullptr);
+	if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_prepare_v2 returned error code: %d\n",status);
+	for (auto iter = v.begin(), end = v.end(); iter!=end; iter++) {
+	  status = sqlite3_reset(fitness);
+	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_reset returned error code: %d\n",status);
+	  status = sqlite3_clear_bindings(fitness);
+	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_clear_bindings returned error code: %d\n",status);
+	  status = sqlite3_bind_double(fitness,1,*iter);
+	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_bind_double returned error code: %d\n",status);
+	  status = sqlite3_step(fitness);
+	  if (status!=SQLITE_DONE) printf("Database::insertFitnessLog sqlite3_step returned unexpected code: %d\n",status);
+	}
+	status = sqlite3_finalize(fitness);
+	fitness = nullptr;
+	if (status!=SQLITE_OK) printf("fitness - sqlite3 NOT OK after sqlite3_finalize\n");
+	end_transaction();
+	printf("Wrote %d fitness log entries.\n",(int)v.size());
 }
 
 void Database::vacuum() {
