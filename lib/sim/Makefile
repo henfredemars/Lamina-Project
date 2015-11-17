@@ -5,12 +5,15 @@ GCC_OPTS := -std=c++11 $(CFLAGS) -flto -Wall
 
 all: libsim.a
 
-libsim.a: Database.o Particle.o SourceParticle.o LaminaParticle.o Lamina.o Source.o
+libsim.a: Database.o Particle.o SourceParticle.o LaminaParticle.o Lamina.o Source.o Simulation.o AnnealingSimulation.o
 	ar rcs libsim.a *.o
 #-Wl,-rpath=../sqlite/.libs/ -L../sqlite/.libs -lsqlite3
 
 Simulation.o: include/Simulation.h Simulation.cpp
 	g++ $(GCC_OPTS) -c Simulation.cpp -o Simulation.o
+
+AnnealingSimulation.o: include/AnnealingSimulation.h AnnealingSimulation.cpp
+	g++ $(GCC_OPTS) -c AnnealingSimulation.cpp -o AnnealingSimulation.o
 
 Database.o: include/Database.h Database.cpp
 	g++ $(GCC_OPTS) -c Database.cpp -o Database.o
