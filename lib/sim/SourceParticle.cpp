@@ -1,6 +1,10 @@
 
 #include "include/SourceParticle.h"
 
+SourceParticle::SourceParticle() : Particle() {
+	this->q = 0;
+}
+
 SourceParticle::SourceParticle(double x,double y,double z,double q) : Particle(x,y,z) {
 	this->q = q;
 }

@@ -7,6 +7,7 @@
 
 class LaminaParticle : public Particle {
 public:
+	LaminaParticle();
 	LaminaParticle(double x,double y,double z);
 };
 

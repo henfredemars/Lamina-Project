@@ -1,10 +1,18 @@
 
 #include "include/Particle.h"
 
+Particle::Particle() : Particle(0,0,0) {
+	//Do nothing
+}
+
 Particle::Particle(double x,double y,double z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+bool Particle::operator==(const Particle& p) const {
+  return (x==p.getX() && y==p.getY() && z==p.getZ());
 }
 
 double Particle::getX() const {
@@ -33,6 +41,10 @@ void Particle::setZ(double z) {
 
 double Particle::getRadius() const {
 	return 1;
+}
+
+double Particle::distanceTo(const Particle& p) const {
+	return sqrt(distanceToSquared(p));
 }
 
 double Particle::distanceToSquared(const Particle& p) const {
