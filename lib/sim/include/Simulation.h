@@ -15,7 +15,8 @@ enum SimType {
 
 class Simulation {
 public:
-	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField);
+	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField,
+		const double& alpha);
 	const SimType& getMode() const;
 	const Lamina& getLamina() const;
 	const Source& getSource() const;

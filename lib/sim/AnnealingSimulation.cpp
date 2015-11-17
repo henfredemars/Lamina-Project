@@ -1,15 +1,16 @@
 
 #include "include/AnnealingSimulation.h"
 
-AnnealingSimulation::AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,const int& numGens) :
-	Simulation(SIMULATED_ANNEALING,l,s,targetField) {
+AnnealingSimulation::AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,
+		const int& numGens,const double& alpha,const int& maxStepTime,const double& startingTemperature,
+		const double& endingTemperature) :
+	Simulation(SIMULATED_ANNEALING,l,s,targetField,alpha) {
 	this->numGens = numGens;
 	this->generationNumber = 0;
-	this->alpha = 0.5;
-	this->startingTemperature = 1;
-	this->endingTemperature = 0;
+	this->startingTemperature = startingTemperature;
+	this->endingTemperature = endingTemperature;
 	this->temperatureDelta = (endingTemperature-startingTemperature)/numGens;
-	this->maxStepTime = 1000;
+	this->maxStepTime = maxStepTime;
 }
 
 bool AnnealingSimulation::step() {
