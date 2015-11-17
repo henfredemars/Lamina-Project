@@ -20,7 +20,7 @@ public:
 	Source(const std::vector<SourceParticle>& v);
 	const std::vector<SourceParticle>& asVector() const;
 	void addParticle(const SourceParticle& sourceParticle);
-	void addNormalNoise(const double& sigma);
+	void addNormalNoise(const double& sigma,std::default_random_engine& engine);
 	double totalCharge() const;
 	Eigen::Vector3d centerOfMass() const;
 	Eigen::Vector3d centerOfCharge() const;

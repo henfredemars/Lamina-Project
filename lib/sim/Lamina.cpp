@@ -17,8 +17,7 @@ void Lamina::addParticle(const LaminaParticle& laminaParticle) {
 	lamina.push_back(laminaParticle);
 }
 
-void Lamina::addNormalNoise(const double& sigma) {
-	std::default_random_engine engine;
+void Lamina::addNormalNoise(const double& sigma,std::default_random_engine& engine) {
 	std::normal_distribution<double> distribution(0,sigma);
 	for (int i = 0; i < (int)lamina.size(); i++) {
 	  LaminaParticle& p = lamina.at(i);
@@ -87,16 +86,16 @@ Lamina Lamina::factorySphereLamina(const Eigen::Vector3d& origin,
                                         const double& radius, const int& numberOfPoints) {
 	assert(radius > 0 && numberOfPoints > 0);
 	std::unordered_set<Eigen::Vector3d,Vector3dHash> points;
-	std::default_random_engine generator;
+	std::default_random_engine engine;
 	std::uniform_real_distribution<double> distribution(-radius,radius);
 	while ((int)points.size() < numberOfPoints*20) { //Make random points in sphere
-	  Eigen::Vector3d v(distribution(generator),distribution(generator),distribution(generator));
+	  Eigen::Vector3d v(distribution(engine),distribution(engine),distribution(engine));
 	  if (v.norm() > radius) continue;
 	  points.insert(v.normalized()*radius+origin);
 	}
 	while ((int)points.size() > numberOfPoints) { //Reject points that are too close together
 	  std::vector<Eigen::Vector3d> closest = closestPoints(points);
-	  if (distribution(generator) > 0) {
+	  if (distribution(engine) > 0) {
 	    points.erase(*(closest.begin()));
 	  } else {
 	    points.erase(*(++closest.begin()));

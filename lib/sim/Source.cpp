@@ -17,8 +17,7 @@ void Source::addParticle(const SourceParticle& sourceParticle) {
 	source.push_back(sourceParticle);
 }
 
-void Source::addNormalNoise(const double& sigma) {
-	std::default_random_engine engine;
+void Source::addNormalNoise(const double& sigma,std::default_random_engine& engine) {
 	std::normal_distribution<double> distribution(0,sigma);
 	for (int i = 0; i < (int)source.size(); i++) {
 	  SourceParticle& p = source.at(i);

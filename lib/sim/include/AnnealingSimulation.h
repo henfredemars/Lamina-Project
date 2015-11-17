@@ -21,6 +21,7 @@ protected:
 	double startingTemperature;
 	double endingTemperature;
 	double temperatureDelta;
+	static std::default_random_engine engine;
 };
 
 #endif /* __ANNEALING_SIMULATION_H */
