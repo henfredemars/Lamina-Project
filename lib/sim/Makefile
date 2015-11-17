@@ -9,6 +9,9 @@ libsim.a: Database.o Particle.o SourceParticle.o LaminaParticle.o Lamina.o Sourc
 	ar rcs libsim.a *.o
 #-Wl,-rpath=../sqlite/.libs/ -L../sqlite/.libs -lsqlite3
 
+Simulation.o: include/Simulation.h Simulation.cpp
+	g++ $(GCC_OPTS) -c Simulation.cpp -o Simulation.o
+
 Database.o: include/Database.h Database.cpp
 	g++ $(GCC_OPTS) -c Database.cpp -o Database.o
 
