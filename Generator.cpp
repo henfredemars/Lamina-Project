@@ -62,7 +62,8 @@ int main (int argc, char **argv) {
 	    return 0;
 	  }
 	  printf("Adding noise, sigma=%f\n",sigma_v);
-	  source.addNormalNoise(sigma_v);
+	  std::default_random_engine& engine;
+	  source.addNormalNoise(sigma_v,engine);
 
 	  //Create the lamina
 	  printf("Building the lamina...\n");
