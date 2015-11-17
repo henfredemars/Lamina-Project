@@ -17,6 +17,23 @@ void Lamina::addParticle(const LaminaParticle& laminaParticle) {
 	lamina.push_back(laminaParticle);
 }
 
+double Lamina::fitness(const Source& s,const double& targetField, const double& alpha) const {
+	double errorFactor = squaredError(s,targetField);
+	double spacingFactor = spacingBadnessFactor();
+	return alpha*errorFactor + (1-alpha)*spacingFactor;
+}
+
+double Lamina::squaredError(const Source& s, const double& targetField) const {
+	double totalError = 0;
+	const std::vector<SourceParticle>& sv = s.asVector();
+	for (auto iter0 = lamina.begin(); iter0!=lamina.end(); iter0++) {
+	  for (auto iter1 = sv.begin(); iter1!=sv.end(); iter1++) {
+	    totalError += (*iter0).squaredError(*iter1,targetField);
+	  }
+	}
+	return totalError;
+}
+
 double Lamina::spacingBadnessFactor() const {
 	double minDist = smallestGapSize();
 	double maxDist = largestGapSize();

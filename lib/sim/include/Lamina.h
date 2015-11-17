@@ -10,6 +10,7 @@
 #include <random>
 #include <unordered_set>
 #include "LaminaParticle.h"
+#include "Source.h"
 #include "Vector3dHash.h"
 #include "../../eigen/Dense"
 
@@ -21,6 +22,8 @@ public:
 	Lamina(const std::vector<LaminaParticle>& v);
 	const std::vector<LaminaParticle>& asVector() const;
 	void addParticle(const LaminaParticle& laminaParticle);
+	double fitness(const Source& s,const double& targetField,const double& alpha) const;
+	double squaredError(const Source& s,const double& targetField) const;
 	double spacingBadnessFactor() const;
 	Eigen::Vector3d centerOfMass() const;
 	static Lamina factorySphereLamina(const Eigen::Vector3d& origin,
