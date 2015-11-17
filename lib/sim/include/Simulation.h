@@ -11,20 +11,22 @@
 enum SimType {
   SIMULATED_ANNEALING,
   GENETIC_ALGORITHM
-}
+};
 
 class Simulation {
 public:
-	Simulation(const SimType& mode,const Lamina& l,const Source& s);
+	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField);
 	const SimType& getMode() const;
 	const Lamina& getLamina() const;
 	const Source& getSource() const;
 	virtual bool step() = 0;
 protected:
 	int generationNumber;
+	double targetField;
+	double alpha;
 	Lamina lamina;
 	Source source;
-	std::vector<double> errorLog;
+	std::vector<double> fitnessLog;
 	SimType mode;
 };
 

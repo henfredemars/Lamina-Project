@@ -22,6 +22,7 @@ public:
 	Lamina(const std::vector<LaminaParticle>& v);
 	const std::vector<LaminaParticle>& asVector() const;
 	void addParticle(const LaminaParticle& laminaParticle);
+	void addNormalNoise(const double& sigma);
 	double fitness(const Source& s,const double& targetField,const double& alpha) const;
 	double squaredError(const Source& s,const double& targetField) const;
 	double spacingBadnessFactor() const;

@@ -17,6 +17,17 @@ void Lamina::addParticle(const LaminaParticle& laminaParticle) {
 	lamina.push_back(laminaParticle);
 }
 
+void Lamina::addNormalNoise(const double& sigma) {
+	std::default_random_engine engine;
+	std::normal_distribution<double> distribution(0,sigma);
+	for (int i = 0; i < (int)lamina.size(); i++) {
+	  LaminaParticle& p = lamina.at(i);
+	  p.setX(p.getX()+distribution(engine));
+	  p.setY(p.getY()+distribution(engine));
+	  p.setZ(p.getZ()+distribution(engine));
+        }
+}
+
 double Lamina::fitness(const Source& s,const double& targetField, const double& alpha) const {
 	double errorFactor = squaredError(s,targetField);
 	double spacingFactor = spacingBadnessFactor();
