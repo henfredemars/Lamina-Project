@@ -1,14 +1,12 @@
 
 #include "include/Simulation.h"
 
-Simulation::Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField,
-	const double& alpha) {
+Simulation::Simulation(const SimType& mode,const Lamina& l,const Source& s,const double targetField,
+	const double alpha,const int numGens) : numGens(numGens),targetField(targetField),
+	alpha(alpha),mode(mode) {
 	this->generationNumber = 0;
-	this->alpha = alpha;
-	this->mode = mode;
 	this->lamina = l;
 	this->source = s;
-	this->targetField = targetField;
 }
 
 Simulation::~Simulation() {

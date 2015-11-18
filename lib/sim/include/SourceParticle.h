@@ -9,6 +9,7 @@ class SourceParticle : public Particle {
 public:
 	SourceParticle();
 	SourceParticle(double x,double y,double z,double q);
+	virtual ~SourceParticle();
 	virtual double getRadius() const;
 	double getQ() const;
 	void setQ(double q);

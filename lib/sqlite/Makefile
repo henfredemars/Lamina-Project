@@ -165,7 +165,7 @@ AWK = gawk
 BUILD_CFLAGS = 
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O2
+CFLAGS = -O0 -g
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo

@@ -1,7 +1,7 @@
 
 #Makefile
 
-GCC_OPTS := -std=c++11 $(CFLAGS) -flto -Wall
+GCC_OPTS := -std=c++11 $(CFLAGS) $(GCC_OPTS)
 
 all: libsim.a
 

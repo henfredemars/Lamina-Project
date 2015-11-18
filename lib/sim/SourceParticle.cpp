@@ -9,6 +9,10 @@ SourceParticle::SourceParticle(double x,double y,double z,double q) : Particle(x
 	this->q = q;
 }
 
+SourceParticle::~SourceParticle() {
+	//Do nothing
+}
+
 double SourceParticle::getRadius() const {
 	return q;
 }

@@ -5,7 +5,7 @@
 std::default_random_engine GeneticAlgorithm::engine;
 
 /*================================Individual================================*/
-Individual::Individual(const Lamina& l,const double& fitness) {
+Individual::Individual(const Lamina& l,const double fitness) {
 	this->lamina = l;
 	this->fitness = fitness;
 }
@@ -18,7 +18,7 @@ const Lamina& Individual::getLamina() const {
 	return lamina;
 }
 
-void Individual::setFitness(const double& fitness) {
+void Individual::setFitness(const double fitness) {
 	this->fitness = fitness;
 }
 
@@ -27,18 +27,20 @@ double Individual::getFitness() const {
 }
 
 /*================================GeneticAlgorithm================================*/
-GeneticAlgorithm::GeneticAlgorithm(const Lamina& l, const Source& s,const double& targetField,
-	const int& numGens,const double& alpha,const int& populationSize,const double& mutationRate) :
-	Simulation(GENETIC_ALGORITHM,l,s,targetField,alpha) {
+GeneticAlgorithm::GeneticAlgorithm(const Lamina& l, const Source& s,const double targetField,
+	const int numGens,const double alpha,const int populationSize,const double mutationRate) :
+	Simulation(GENETIC_ALGORITHM,l,s,targetField,alpha,numGens),
+	populationSize(populationSize),mutationRate(mutationRate) {
 	this->generationNumber = 0;
-	this->numGens = numGens;
-	this->populationSize = populationSize;
-	this->mutationRate = mutationRate;
 	for (int i = 0; i < populationSize; i++) {
 	  Lamina candidate = lamina;
 	  candidate.addNormalNoise(1,engine);
 	  population.emplace_back(candidate,0);
 	}
+}
+
+GeneticAlgorithm::~GeneticAlgorithm() {
+	//Do nothing
 }
 
 int cap(double x,int m) {
