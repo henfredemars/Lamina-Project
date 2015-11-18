@@ -9,9 +9,8 @@ LaminaParticle::LaminaParticle(double x,double y,double z) : Particle(x,y,z) {
 	//Do nothing
 }
 
-double LaminaParticle::squaredError(const SourceParticle& s, const double& targetField) const {
+double LaminaParticle::fieldStrength(const SourceParticle& s) const {
 	double field = std::abs(s.getQ())/(this->distanceToSquared(s));
-	double error = field-targetField;
-	return error*error;
+	return field;
 }
 

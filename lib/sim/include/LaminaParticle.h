@@ -11,7 +11,7 @@ class LaminaParticle : public Particle {
 public:
 	LaminaParticle();
 	LaminaParticle(double x,double y,double z);
-	double squaredError(const SourceParticle& s,const double& targetField) const;
+	double fieldStrength(const SourceParticle& s) const;
 };
 
 #endif /* __LAMINAPARTICLE_H */
