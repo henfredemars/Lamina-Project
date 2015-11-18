@@ -11,6 +11,10 @@ Simulation::Simulation(const SimType& mode,const Lamina& l,const Source& s,const
 	this->targetField = targetField;
 }
 
+Simulation::~Simulation() {
+	//Do nothing
+}
+
 const SimType& Simulation::getMode() const {
 	return mode;
 }
@@ -25,6 +29,14 @@ const Source& Simulation::getSource() const {
 
 int Simulation::getGeneration() const {
 	return generationNumber;
+}
+
+double Simulation::startingEnergy() const {
+	return fitnessLog.at(0);
+}
+
+double Simulation::finalEnergy() const {
+	return fitnessLog.at(fitnessLog.size()-1);
 }
 
 const std::vector<double>& Simulation::getFitnessLog() const {

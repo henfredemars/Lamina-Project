@@ -22,11 +22,11 @@ int main (int argc, char **argv) {
 	  TCLAP::ValueArg<std::string> filename("f","filename","Database file name",false,"sys.db","string");
 	  TCLAP::ValueArg<double> fieldStrength("","fieldStrength","Target simulation field strength",false,0.1,"double");
 	  TCLAP::ValueArg<int> numGens("","numGens","Number of iterations to simulate",false,300,"int");
-	  TCLAP::ValueArg<double> alpha("","alpha","Weight of squared error to spacing relaxation",false,0.5,"double");
+	  TCLAP::ValueArg<double> alpha("","alpha","Weight of squared error to spacing relaxation",false,0.99,"double");
 	  TCLAP::ValueArg<int> populationSize("","populationSize","Size of test population (genetic algorithm only)",false,100,"int");
 	  TCLAP::ValueArg<int> maxStepTime("","maxStepTime","Maximum time (MS) to search for a better next-state (simulated annealing only)",false,1000,"int");
 	  TCLAP::ValueArg<double> mutationRate("","mutationRate","Sigma of normal mutation (genetic algorithm only)",false,0.1,"double");
-	  TCLAP::ValueArg<double> startingTemperature("","startTemp","Starting normal temperature (simulated annealing only)",false,0.1,"double");
+	  TCLAP::ValueArg<double> startingTemperature("","startTemp","Starting normal temperature (simulated annealing only)",false,1,"double");
 	  TCLAP::ValueArg<double> endingTemperature("","endTemp","Ending normal temperature (simulated annealing only)",false,0,"double");
 	  cmd.add(filename);
 	  cmd.add(fieldStrength);
@@ -89,11 +89,16 @@ int main (int argc, char **argv) {
 	    db.insertLaminaParticles(s->getLamina(),generationNumber);
 	  }
 
+	  //Print some final statistics
+	  printf("\nStarting Energy: %f\n",s->startingEnergy());
+	  printf("Final Energy: %f\n",s->finalEnergy());
+
 	  //Save out the fitness log
 	  db.insertFitnessLog(s->getFitnessLog());
 
 	  //End
 	  printf("Process completed.\n");
+	  delete s;
 
 	} catch (TCLAP::ArgException &e) {
 	  std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

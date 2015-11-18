@@ -2,7 +2,7 @@
 
 export CFLAGS = -O3
 
-GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto -ffast-math
+GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto -ffast-math -fno-finite-math-only -fuse-linker-plugin
 
 all: .sqlite_built_marker lib/sim/libsim.a generator simulator
 
