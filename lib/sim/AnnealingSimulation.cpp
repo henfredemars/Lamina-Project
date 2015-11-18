@@ -24,9 +24,9 @@ bool AnnealingSimulation::step() {
 	double curFitness = lamina.fitness(source,targetField,alpha);
 	while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-start).count() < maxStepTime) {
 	  Lamina candidate = lamina;
-	  candidate.addNormalNoise(temperature,engine);
+	  candidate.addNormalNoise(0.1,engine);
 	  double newFitness = candidate.fitness(source,targetField,alpha);
-	  if (newFitness <= curFitness || distribution(engine) < exp(-(1/temperature)*(newFitness-curFitness)*2048)) {
+	  if (newFitness <= curFitness || distribution(engine) < exp(-(1/temperature)*(newFitness-curFitness)*512)) {
 	    lamina = candidate;
 	    curFitness = newFitness;
 	    break;

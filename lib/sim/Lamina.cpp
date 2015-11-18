@@ -35,11 +35,14 @@ double Lamina::fitness(const Source& s,const double& targetField, const double& 
 
 double Lamina::squaredError(const Source& s, const double& targetField) const {
 	double totalError = 0;
+	double totalField;
 	const std::vector<SourceParticle>& sv = s.asVector();
 	for (auto iter0 = lamina.begin(); iter0!=lamina.end(); iter0++) {
+	  totalField = 0;
 	  for (auto iter1 = sv.begin(); iter1!=sv.end(); iter1++) {
-	    totalError += (*iter0).squaredError(*iter1,targetField);
+	    totalField += (*iter0).fieldStrength(*iter1);
 	  }
+	  totalError += std::abs(totalField-targetField);
 	}
 	return totalError;
 }

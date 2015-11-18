@@ -1,6 +1,6 @@
 #Makefile for Lamina-Project
 
-export CFLAGS = -O3
+export CFLAGS = -O2
 
 GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto -ffast-math -fno-finite-math-only -fuse-linker-plugin
 
