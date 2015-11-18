@@ -85,7 +85,8 @@ int main (int argc, char **argv) {
 	  //Step the simulator and save out the generations
 	  while (s->step()) {
 	    int generationNumber = s->getGeneration();
-	    printf("Simulating generation %d...\n",generationNumber);
+	    double currentEnergy = s->finalEnergy();
+	    printf("Simulating generation %d, energy = %f\n",generationNumber,currentEnergy);
 	    db.insertLaminaParticles(s->getLamina(),generationNumber);
 	  }
 
