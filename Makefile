@@ -1,8 +1,8 @@
 #Makefile for Lamina-Project
 
-export CFLAGS = -O1
+export CFLAGS = -O3
 
-GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto
+GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -flto -ffast-math
 
 all: .sqlite_built_marker lib/sim/libsim.a generator simulator
 
@@ -28,7 +28,7 @@ test:
 	make -C test test
 
 clean:
-	rm -f .sqlite_built_marker *.o *.bin
+	rm -f .sqlite_built_marker *.o *.bin *.db
 	make -C lib/sqlite clean
 	make -C lib/sim clean
 	make -C test clean
