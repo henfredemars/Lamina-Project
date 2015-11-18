@@ -24,16 +24,16 @@ public:
 	const std::vector<LaminaParticle>& asVector() const;
 	void addParticle(const LaminaParticle& laminaParticle);
 	void addNormalNoise(const double& sigma,std::default_random_engine& engine);
-	double fitness(const Source& s,const double& targetField,const double& alpha) const;
+	double fitness(const Source& s,const double targetField,const double alpha) const;
 	double squaredError(const Source& s,const double& targetField) const;
 	double spacingBadnessFactor() const;
 	Eigen::Vector3d centerOfMass() const;
 	static Lamina factorySphereLamina(const Eigen::Vector3d& origin,
-					const double& radius,
-					const int& numberOfPoints);
+					const double radius,
+					const int numberOfPoints);
 	static Lamina factoryFibSphereLamina(const Eigen::Vector3d& origin,
-					const double& radius,
-					const int& numberOfPoints);
+					const double radius,
+					const int numberOfPoints);
 private:
 	std::vector<LaminaParticle> lamina;
 	LaminaParticle closestPointTo(const LaminaParticle& p) const;

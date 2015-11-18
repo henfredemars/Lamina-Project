@@ -11,6 +11,10 @@ Particle::Particle(double x,double y,double z) {
 	this->z = z;
 }
 
+Particle::~Particle() {
+	//Do nothing
+}
+
 bool Particle::operator==(const Particle& p) const {
   return (x==p.getX() && y==p.getY() && z==p.getZ());
 }

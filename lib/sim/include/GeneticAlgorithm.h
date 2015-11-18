@@ -14,10 +14,10 @@
 //Individual for holding lamina and fitness in population
 class Individual {
 public:
-	Individual(const Lamina& l,const double& fitness);
+	Individual(const Lamina& l,const double fitness);
 	bool operator<(const Individual& i) const;
 	const Lamina& getLamina() const;
-	void setFitness(const double& fitness);
+	void setFitness(const double fitness);
 	double getFitness() const;
 private:
 	Lamina lamina;
@@ -27,13 +27,13 @@ private:
 //Genetic algorithm simulator
 class GeneticAlgorithm : public Simulation {
 public:
-	GeneticAlgorithm(const Lamina& l, const Source& s,const double& targetField,
-                const int& numGens,const double& alpha,const int& populationSize,const double& mutationRate);
+	GeneticAlgorithm(const Lamina& l, const Source& s,const double targetField,
+                const int numGens,const double alpha,const int populationSize,const double mutationRate);
+	virtual ~GeneticAlgorithm();
 	virtual bool step();
 protected:
-	int numGens;
-	int populationSize;
-	double mutationRate;
+	const int populationSize;
+	const double mutationRate;
 	std::vector<Individual> population;
 	static std::default_random_engine engine;
 };

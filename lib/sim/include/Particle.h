@@ -10,6 +10,7 @@ class Particle {
 public:
 	Particle();
 	Particle(double x,double y, double z);
+	virtual ~Particle();
 	bool operator==(const Particle& p) const;
 	double getX() const;
 	double getY() const;

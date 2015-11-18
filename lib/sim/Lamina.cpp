@@ -27,7 +27,7 @@ void Lamina::addNormalNoise(const double& sigma,std::default_random_engine& engi
         }
 }
 
-double Lamina::fitness(const Source& s,const double& targetField, const double& alpha) const {
+double Lamina::fitness(const Source& s,const double targetField, const double alpha) const {
 	double errorFactor = squaredError(s,targetField);
 	double spacingFactor = spacingBadnessFactor();
 	return alpha*errorFactor + (1-alpha)*spacingFactor;
@@ -70,7 +70,7 @@ Eigen::Vector3d Lamina::centerOfMass() const {
 }
 
 Lamina Lamina::factoryFibSphereLamina(const Eigen::Vector3d& origin,
-					const double& radius, const int& numberOfPoints) {
+					const double radius, const int numberOfPoints) {
 	std::vector<LaminaParticle> points;
 	double offset = 2.0/numberOfPoints;
 	double inc = PI*(3-sqrt(5));
@@ -86,7 +86,7 @@ Lamina Lamina::factoryFibSphereLamina(const Eigen::Vector3d& origin,
 }
 
 Lamina Lamina::factorySphereLamina(const Eigen::Vector3d& origin,
-                                        const double& radius, const int& numberOfPoints) {
+                                        const double radius, const int numberOfPoints) {
 	assert(radius > 0 && numberOfPoints > 0);
 	std::unordered_set<Eigen::Vector3d,Vector3dHash> points;
 	std::default_random_engine engine;
@@ -138,7 +138,7 @@ LaminaParticle Lamina::closestPointTo(const LaminaParticle& p) const {
 	assert(lamina.size()>1 && "Lamina too small to define closest point");
 	for (auto iter = lamina.begin(), end = lamina.end(); iter!=end; iter++) {
 	  if (p==(*iter)) continue;
-	  double distance = p.distanceTo(*iter);
+	  double distance = p.distanceToSquared(*iter);
 	  if (distance <= minDist) {
 	    closest = *iter;
 	    minDist = distance;
@@ -160,7 +160,7 @@ double Lamina::smallestGapSize() const {
 	double minSize = std::numeric_limits<double>::infinity();
 	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
 	  LaminaParticle closest = closestPointTo(*iter);
-	  double distance = closest.distanceTo(*iter);
+	  double distance = closest.distanceToSquared(*iter);
 	  if (distance <= minSize) {
 	    minSize = distance;
 	  }
@@ -172,7 +172,7 @@ double Lamina::largestGapSize() const {
 	double maxSize = 0;
 	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
 	  LaminaParticle closest = closestPointTo(*iter);
-	  double distance = closest.distanceTo(*iter);
+	  double distance = closest.distanceToSquared(*iter);
 	  if (distance >= maxSize) {
 	    maxSize = distance;
 	  }

@@ -15,8 +15,8 @@ enum SimType {
 
 class Simulation {
 public:
-	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField,
-		const double& alpha);
+	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double targetField,
+		const double alpha,const int numGens);
 	virtual ~Simulation();
 	const SimType& getMode() const;
 	const Lamina& getLamina() const;
@@ -28,12 +28,13 @@ public:
 	virtual bool step() = 0;
 protected:
 	int generationNumber;
-	double targetField;
-	double alpha;
+	const int numGens;
+	const double targetField;
+	const double alpha;
 	Lamina lamina;
 	Source source;
 	std::vector<double> fitnessLog;
-	SimType mode;
+	const SimType mode;
 };
 
 #endif /* __SIMULATION_H */

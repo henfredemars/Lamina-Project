@@ -12,16 +12,16 @@
 
 class AnnealingSimulation : public Simulation {
 public:
-	AnnealingSimulation(const Lamina& l, const Source& s,const double& targetField,
-                const int& numGens,const double& alpha,const int& maxStepTime,const double& startingTemperature,
-                const double& endingTemperature);
+	AnnealingSimulation(const Lamina& l, const Source& s,const double targetField,
+                const int numGens,const double alpha,const int maxStepTime,const double startingTemperature,
+                const double endingTemperature);
+	virtual ~AnnealingSimulation();
 	virtual bool step();
 protected:
-	int numGens;
-	int maxStepTime;
-	double startingTemperature;
-	double endingTemperature;
-	double temperatureDelta;
+	const int maxStepTime;
+	const double startingTemperature;
+	const double endingTemperature;
+	const double temperatureDelta;
 	static std::default_random_engine engine;
 };
 
