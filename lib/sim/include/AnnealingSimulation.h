@@ -5,6 +5,7 @@
 #define __ANNEALING_SIMULATION_H
 
 #include <chrono>
+#include <cmath>
 #include "Simulation.h"
 #include "Lamina.h"
 #include "Source.h"

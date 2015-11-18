@@ -69,9 +69,9 @@ int main (int argc, char **argv) {
 	  printf("Building the lamina...\n");
 	  Lamina lamina;
 	  if (fibSwitch.getValue()) {
-	    lamina = Lamina::factoryFibSphereLamina(Eigen::Vector3d(0,0,0),22,numPoints_v);
+	    lamina = Lamina::factoryFibSphereLamina(Eigen::Vector3d(0,0,0),40,numPoints_v);
 	  } else {
-	    lamina = Lamina::factorySphereLamina(Eigen::Vector3d(0,0,0),22,numPoints_v);
+	    lamina = Lamina::factorySphereLamina(Eigen::Vector3d(0,0,0),40,numPoints_v);
 	  }
 
 	  //Write system to database

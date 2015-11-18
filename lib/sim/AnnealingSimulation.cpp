@@ -17,6 +17,7 @@ AnnealingSimulation::AnnealingSimulation(const Lamina& l, const Source& s,const 
 
 bool AnnealingSimulation::step() {
 	if (generationNumber >= numGens) return false;
+	std::uniform_real_distribution<double> distribution(0,1);
 	std::chrono::time_point<std::chrono::system_clock> start;
         start = std::chrono::system_clock::now();
 	double temperature = startingTemperature+temperatureDelta*generationNumber;
@@ -25,7 +26,7 @@ bool AnnealingSimulation::step() {
 	  Lamina candidate = lamina;
 	  candidate.addNormalNoise(temperature,engine);
 	  double newFitness = candidate.fitness(source,targetField,alpha);
-	  if (newFitness <= curFitness) {
+	  if (newFitness <= curFitness || distribution(engine) < exp(-(1/temperature)*(newFitness-curFitness)*2048)) {
 	    lamina = candidate;
 	    curFitness = newFitness;
 	    break;

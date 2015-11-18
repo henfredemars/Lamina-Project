@@ -3,6 +3,7 @@
 #ifndef __LAMINAPARTICLE_H
 #define __LAMINAPARTICLE_H
 
+#include <cmath>
 #include "Particle.h"
 #include "SourceParticle.h"
 
