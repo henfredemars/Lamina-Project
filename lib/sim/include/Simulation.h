@@ -17,10 +17,13 @@ class Simulation {
 public:
 	Simulation(const SimType& mode,const Lamina& l,const Source& s,const double& targetField,
 		const double& alpha);
+	virtual ~Simulation();
 	const SimType& getMode() const;
 	const Lamina& getLamina() const;
 	const Source& getSource() const;
 	int getGeneration() const;
+	double startingEnergy() const;
+	double finalEnergy() const;
 	const std::vector<double>& getFitnessLog() const;
 	virtual bool step() = 0;
 protected:
