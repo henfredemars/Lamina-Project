@@ -329,8 +329,8 @@ void Database::clear() {
 	status = sqlite3_finalize(clear);
 	clear = nullptr;
 	if (status!=SQLITE_OK) printf("clear - sqlite3 NOT OK after sqlite3_finalize\n");
-	vacuum();
 	end_transaction();
+	vacuum();
 	printf("Database wiped!\n");
 }
 

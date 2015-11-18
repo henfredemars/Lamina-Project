@@ -148,7 +148,7 @@ std::vector<double> Lamina::gapSizes() const {
 	std::vector<double> gaps;
 	for (auto iter = lamina.begin(), end=lamina.end(); iter!=end; iter++) {
 	  LaminaParticle closest = closestPointTo(*iter);
-	  gaps.push_back(closest.distanceTo(*iter));
+	  gaps.push_back(closest.distanceToSquared(*iter));
 	}
 	return gaps;
 }
