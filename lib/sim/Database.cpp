@@ -2,6 +2,8 @@
 #include "include/Database.h"
 
 Database::Database(std::string path) {
+	this->in_transaction = false;
+	this->debug = false;
 	int status = sqlite3_open(path.c_str(),&db);
 	if (status!=SQLITE_OK) {
 	  printf("Database::Database sqlite3_open returned error code: %d\n",status);
@@ -34,6 +36,10 @@ Database::Database(std::string path) {
 	if (status!=SQLITE_OK) printf("init_ftable - sqlite3 NOT OK after sqlite3_finalize\n");
 }
 
+Database::Database(std::string path, bool debug) : Database(path) {
+	this->debug = debug;
+}
+
 Database::Database(Database&& d) {
 	this->db = d.db;
 	d.db = nullptr;
@@ -48,6 +54,7 @@ Database& Database::operator=(Database&& d) {
 
 Database::~Database() {
 	if (!db) return;
+	end_transaction();
 	int status = sqlite3_close(db);
 	if (status==SQLITE_BUSY) {
 	  printf("Database::~Database WARNING! SQLITE_BUSY on close!\n");
@@ -130,7 +137,7 @@ Lamina Database::getLaminaParticlesForGeneration(const int& generationNumber) {
 	status = sqlite3_finalize(get_lamina_particles_gen);
 	get_lamina_particles_gen = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles_gen - sqlite3 NOT OK after sqlite3_finalize\n");
-	printf("Read %d lamina particle(s) from the database.\n",particles.size());
+	if (debug) printf("Read %d lamina particle(s) from the database.\n",particles.size());
 	return Lamina(particles);
 }
 
@@ -155,7 +162,7 @@ std::vector<LaminaParticle> Database::getAllLaminaParticles() {
 	status = sqlite3_finalize(get_lamina_particles);
 	get_lamina_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	printf("Read %d lamina particle(s) from the database.\n",particles.size());
+	if (debug) printf("Read %d lamina particle(s) from the database.\n",particles.size());
 	return particles;
 }
 
@@ -181,11 +188,13 @@ Source Database::getSourceParticles() {
 	status = sqlite3_finalize(get_source_particles);
 	get_source_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_source_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	printf("Read %d system particle(s).\n",particles.size());
+	if (debug) printf("Read %d system particle(s).\n",particles.size());
 	return Source(particles);
 }
 
-void Database::begin_transaction() {
+void Database::hold_open_transaction() {
+	if (in_transaction) return;
+	in_transaction = true;
 	sqlite3_stmt* begin;
 	const char* stmt = "begin transaction";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&begin,nullptr);
@@ -198,6 +207,8 @@ void Database::begin_transaction() {
 }
 
 void Database::end_transaction() {
+	if (!in_transaction) return;
+	in_transaction = false;
 	sqlite3_stmt* end;
 	const char* stmt = "end transaction";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&end,nullptr);
@@ -210,7 +221,7 @@ void Database::end_transaction() {
 }
 
 void Database::insertSourceParticles(const Source& source) {
-	begin_transaction();
+	hold_open_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
 	const char* type = "Source";
@@ -242,12 +253,11 @@ void Database::insertSourceParticles(const Source& source) {
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	end_transaction();
-	printf("Wrote %d system particle(s).\n",particles.size());
+	if (debug) printf("Wrote %d system particle(s).\n",particles.size());
 }
 
 void Database::insertLaminaParticles(const Lamina& lamina,const int& generationNumber) {
-	begin_transaction();
+	hold_open_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
 	const char* type = "Lamina";
@@ -279,12 +289,11 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	end_transaction();
-	printf("Wrote %d lamina particle(s).\n",particles.size());
+	if (debug) printf("Wrote %d lamina particle(s).\n",particles.size());
 }
 
 void Database::insertFitnessLog(const std::vector<double>& v) {
-	begin_transaction();
+	hold_open_transaction();
 	sqlite3_stmt* fitness;
 	const char* stmt = "insert into fitness values(?)";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&fitness,nullptr);
@@ -302,11 +311,11 @@ void Database::insertFitnessLog(const std::vector<double>& v) {
 	status = sqlite3_finalize(fitness);
 	fitness = nullptr;
 	if (status!=SQLITE_OK) printf("fitness - sqlite3 NOT OK after sqlite3_finalize\n");
-	end_transaction();
-	printf("Wrote %d fitness log entries.\n",(int)v.size());
+	if (debug) printf("Wrote %d fitness log entries.\n",(int)v.size());
 }
 
 void Database::vacuum() {
+	end_transaction();
 	sqlite3_stmt* vacuum;
 	const char* stmt = "vacuum";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&vacuum,nullptr);
@@ -319,7 +328,7 @@ void Database::vacuum() {
 }
 
 void Database::clear() {
-	begin_transaction();
+	hold_open_transaction();
 	sqlite3_stmt* clear;
 	const char* stmt = "delete from particles";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&clear,nullptr);
@@ -329,7 +338,6 @@ void Database::clear() {
 	status = sqlite3_finalize(clear);
 	clear = nullptr;
 	if (status!=SQLITE_OK) printf("clear - sqlite3 NOT OK after sqlite3_finalize\n");
-	end_transaction();
 	vacuum();
 	printf("Database wiped!\n");
 }
