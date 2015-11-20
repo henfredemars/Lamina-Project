@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv) {
 	//Initialize
-	Database db("test.db");
+	Database db("test.db",true);
 	db.clear();
 	std::vector<SourceParticle> v_s;
 	v_s.push_back(SourceParticle(1.1,-2.2,3.3,4.4));

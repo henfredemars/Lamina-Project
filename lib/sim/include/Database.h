@@ -17,6 +17,7 @@ class Database {
 
 public:
 	Database(std::string path);
+	Database(std::string path, bool debug);
 	Database(Database&& d);
 	Database& operator=(Database&& d);
 	~Database();
@@ -32,7 +33,9 @@ public:
 	void clear();
 private:
 	sqlite3* db;
-	void begin_transaction();
+	bool in_transaction;
+	bool debug;
+	void hold_open_transaction();
 	void end_transaction();
 	void vacuum();
 };
