@@ -1,6 +1,6 @@
 #Makefile for Lamina-Project
 
-export CFLAGS = -O2
+export CFLAGS = -O2 -march=native
 
 export GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -ffast-math -fno-finite-math-only -fuse-linker-plugin
 
@@ -28,7 +28,7 @@ test:
 	make -C test test
 
 clean:
-	rm -f .sqlite_built_marker *.o *.bin *.db
+	rm -f .sqlite_built_marker *.o *.bin *.db-*
 	make -C lib/sqlite clean
 	make -C lib/sim clean
 	make -C test clean
