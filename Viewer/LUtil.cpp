@@ -221,7 +221,7 @@ void resetCamera() {
 /*It draws a sphere for each particle in the particles vector*/
 void drawParticles() {
     //Here I start drawing each particle
-    for(int i =0; i<particles_vector.size(); i++) {
+    for(int i =0; i< (int)particles_vector.size(); i++) {
     
         const float p_r = particles_vector[i].getRadius();
         const float p_x = particles_vector[i].getX();
