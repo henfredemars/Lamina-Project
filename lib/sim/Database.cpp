@@ -61,10 +61,12 @@ Database::~Database() {
 	} else if (status!=SQLITE_OK) {
 	  printf("Database::~Database sqlite3_close returned error code: %d\n",status);
 	}
+	db = nullptr;
 	printf("Database closed.\n");
 }
 
 int Database::getMaxGenerationNumber() {
+	assert(db && "Database resource is missing!");
 	sqlite3_stmt* get_max_gen;
 	const char* stmt = "select max(generation) from particles";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&get_max_gen,nullptr);
@@ -82,6 +84,7 @@ int Database::getMaxGenerationNumber() {
 }
 
 int Database::getTotalParticlesInDB() {
+	assert(db && "Database resource is missing!");
 	sqlite3_stmt* get_total_particles;
 	const char* stmt = "select count(*) from particles";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&get_total_particles,nullptr);
@@ -97,6 +100,7 @@ int Database::getTotalParticlesInDB() {
 }
 
 int Database::countParticlesInGeneration(const int& generationNumber) {
+	assert(db && "Database resource is missing!");
 	sqlite3_stmt* count_particles_generation;
 	const char* stmt = "select count(*) from particles where generation=?";
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&count_particles_generation,nullptr);
@@ -115,6 +119,7 @@ int Database::countParticlesInGeneration(const int& generationNumber) {
 }
 
 Lamina Database::getLaminaParticlesForGeneration(const int& generationNumber) {
+	assert(db && "Database resource is missing!");
 	std::vector<LaminaParticle> particles;
 	sqlite3_stmt* get_lamina_particles_gen;
 	const char* stmt = "select x,y,z from particles where generation=? and type=?";
@@ -142,6 +147,7 @@ Lamina Database::getLaminaParticlesForGeneration(const int& generationNumber) {
 }
 
 std::vector<LaminaParticle> Database::getAllLaminaParticles() {
+	assert(db && "Database resource is missing!");
 	std::vector<LaminaParticle> particles;
 	sqlite3_stmt* get_lamina_particles;
 	const char* stmt = "select x,y,z from particles where type=?";
@@ -167,6 +173,7 @@ std::vector<LaminaParticle> Database::getAllLaminaParticles() {
 }
 
 Source Database::getSourceParticles() {
+	assert(db && "Database resource is missing!");
 	std::vector<SourceParticle> particles;
 	sqlite3_stmt* get_source_particles;
 	const char* stmt = "select x,y,z,q from particles where type=?";
@@ -194,6 +201,7 @@ Source Database::getSourceParticles() {
 
 void Database::hold_open_transaction() {
 	if (in_transaction) return;
+	assert(db && "Database resource is missing!");
 	in_transaction = true;
 	sqlite3_stmt* begin;
 	const char* stmt = "begin transaction";
@@ -208,6 +216,7 @@ void Database::hold_open_transaction() {
 
 void Database::end_transaction() {
 	if (!in_transaction) return;
+	assert(db && "Database resource is missing!");
 	in_transaction = false;
 	sqlite3_stmt* end;
 	const char* stmt = "end transaction";
@@ -221,6 +230,7 @@ void Database::end_transaction() {
 }
 
 void Database::insertSourceParticles(const Source& source) {
+	assert(db && "Database resource is missing!");
 	hold_open_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
@@ -257,6 +267,7 @@ void Database::insertSourceParticles(const Source& source) {
 }
 
 void Database::insertLaminaParticles(const Lamina& lamina,const int& generationNumber) {
+	assert(db && "Database resource is missing!");
 	hold_open_transaction();
 	sqlite3_stmt* insert_particles;
 	const char* stmt = "insert into particles values(?,?,?,?,?,?)";
@@ -293,6 +304,7 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 }
 
 void Database::insertFitnessLog(const std::vector<double>& v) {
+	assert(db && "Database resource is missing!");
 	hold_open_transaction();
 	sqlite3_stmt* fitness;
 	const char* stmt = "insert into fitness values(?)";
@@ -315,6 +327,7 @@ void Database::insertFitnessLog(const std::vector<double>& v) {
 }
 
 void Database::vacuum() {
+	assert(db && "Database resource is missing!");
 	end_transaction();
 	sqlite3_stmt* vacuum;
 	const char* stmt = "vacuum";
@@ -328,6 +341,7 @@ void Database::vacuum() {
 }
 
 void Database::clear() {
+	assert(db && "Database resource is missing!");
 	hold_open_transaction();
 	sqlite3_stmt* clear;
 	const char* stmt = "delete from particles";
