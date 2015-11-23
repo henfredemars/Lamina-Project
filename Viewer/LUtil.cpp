@@ -3,8 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "particles.h"
-
+#include <string>
 using namespace std;
 
 //Camera position on XZ plane
@@ -21,9 +20,14 @@ const float DEG2RAD = 3.14159/180;
 
 //Vector of Particles (TEST ONLY)
 vector <Particles> particles_vector;
+vector <string> statistics_vector;
+
+//Statistics Flag and particle number
+bool statistics_flag = false;
+GLuint index = 0;
 
 //Init Function
-bool initGL() {
+bool initGL( vector <Particles> particles_vec_in , vector <string> statistics_vec_in ) {
     //Initializing Projection Matrix
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -71,16 +75,9 @@ bool initGL() {
         return false;
     }
     
-    //Creating the Initial Particles Vector
-    /*This is temporary, test only.
-    3 Particles will be added*/
-    Particles p1(0.0f, 5.0f, -15.0f, 1.0f);
-    Particles p2(6.0f, 4.0f, -10.0f, 1.0f);
-    Particles p3(-5.0f, 5.0f, -5.0f, 3.0f);
-
-    particles_vector.push_back(p1);
-    particles_vector.push_back(p2);
-    particles_vector.push_back(p3);
+    //Getting the initial Particles Vector
+    particles_vector = particles_vec_in;
+    statistics_vector = statistics_vec_in;
     
     
     return true;
@@ -94,7 +91,8 @@ void render() {
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
-          
+    
+                  
     //Defining Camera Position
     gluLookAt(	gCameraPositionX, gCameraPositionY, gCameraPositionZ,
 			gCameraPositionX+gCameraDirectionX, 0.0f, gCameraPositionZ+gCameraDirectionZ,
@@ -122,8 +120,10 @@ void render() {
     
     //Particle Rendering
     drawParticles();
-        
-    //Swapping Back and Forth Render Buffers  
+    
+    //Drawing text
+    if (statistics_flag) printText(-1, 0.9, statistics_vector[(int) index-1]);
+      
     glutSwapBuffers();    
 }
 
@@ -192,17 +192,65 @@ void handleMouse(int button, int state, int x, int y) {
     //Setting variables used to recogize the objects which are clicked by the user
     //GLbyte color[4];
     //GLfloat depth;
-    GLuint index;   //Only the stencil index will be used
+    //GLuint index;   //Only the stencil index will be used
     
     //Reading Pixels
     //glReadPixels(x, window_height - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
     //glReadPixels(x, window_height - y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
     glReadPixels(x, window_height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
     
+    //Setting the statistics flag, if a particle was selected, then the flag is set to true
     if (index != 0) {
-    printf("Clicked on stencil index %u\n",
-          index);
+        statistics_flag = true;
     }
+    else {
+        statistics_flag = false;
+    }
+}
+
+//printText Function
+/*This function prints text on screen*/
+void printText(float x, float y, string input_string) {
+    
+    glPushMatrix(); //Pushing Modelview Matrix
+    glMatrixMode( GL_PROJECTION );
+    glPushMatrix(); //Pushing Projection Matrix
+    
+    //Resetting Projection and Modelview Matrices
+    //This way, the text will have different coordinate system than the rest of the scene
+    glLoadIdentity();
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+    
+    //Disabling Lighting, so the text will be properly rendered
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos3f(x, y, 0);  //Text Position 
+
+    //Printing the text on screen
+    int l;
+    const char *st = input_string.c_str();
+
+    l=input_string.size();
+    
+    //Resetting the stencil
+    glStencilFunc(GL_ALWAYS, 0, -1);    
+    for(int i=0; i < l; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, st[i]); // Printing a character on screen
+    }
+    
+    //Reeabling Lighting
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+        
+    //Recovering Projection and ModelView Matrices    
+    glMatrixMode( GL_PROJECTION );
+    glPopMatrix();
+    glMatrixMode( GL_MODELVIEW );
+    glPopMatrix();
+    
 }
 
 //Camera Reset Function
@@ -221,7 +269,7 @@ void resetCamera() {
 /*It draws a sphere for each particle in the particles vector*/
 void drawParticles() {
     //Here I start drawing each particle
-    for(int i =0; i< (int)particles_vector.size(); i++) {
+    for(int i =0; i<particles_vector.size(); i++) {
     
         const float p_r = particles_vector[i].getRadius();
         const float p_x = particles_vector[i].getX();
@@ -233,7 +281,8 @@ void drawParticles() {
         glTranslatef(p_x,p_y,p_z);
         
         //Setting Particle color and drawing it as sphere
-        glColor3f(0.9f, 0.5f, 0.5f);
+        if ((int)index==i+1) glColor3f(0.4f, 0.4f, 0.9f);
+        else glColor3f(0.9f, 0.5f, 0.5f);
         glStencilFunc(GL_ALWAYS, i + 1, -1);   
         glutSolidSphere(p_r,20,20);
 
