@@ -15,7 +15,7 @@ Database::Database(std::string path) {
 	sqlite3_stmt* init_ptable;
 	sqlite3_stmt* init_ftable;
 	const char* stmt0 = "create table if not exists particles(x real, y real, z real, q real, type text, generation integer)";
-	const char* stmt1 = "create table if not exists fitness(f real)";
+	const char* stmt1 = "create table if not exists fitness(f real,generation integer)";
 	status = sqlite3_prepare_v2(db,stmt0,std::strlen(stmt0),&init_ptable,nullptr);
 	if (status!=SQLITE_OK) {
 	  printf("Database::Database sqlite3_prepare_v2 returned error code: %d\n",status);
@@ -47,8 +47,7 @@ Database::Database(Database&& d) {
 
 Database& Database::operator=(Database&& d) {
 	this->~Database();
-	this->db = d.db;
-	d.db = nullptr;
+	new (this) Database(std::move(d));
 	return (*this);
 }
 
@@ -307,7 +306,8 @@ void Database::insertFitnessLog(const std::vector<double>& v) {
 	assert(db && "Database resource is missing!");
 	hold_open_transaction();
 	sqlite3_stmt* fitness;
-	const char* stmt = "insert into fitness values(?)";
+	const char* stmt = "insert into fitness values(?,?)";
+	int generationNumber = 0;
 	int status = sqlite3_prepare_v2(db,stmt,std::strlen(stmt),&fitness,nullptr);
 	if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_prepare_v2 returned error code: %d\n",status);
 	for (auto iter = v.begin(), end = v.end(); iter!=end; iter++) {
@@ -316,6 +316,8 @@ void Database::insertFitnessLog(const std::vector<double>& v) {
 	  status = sqlite3_clear_bindings(fitness);
 	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_clear_bindings returned error code: %d\n",status);
 	  status = sqlite3_bind_double(fitness,1,*iter);
+	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_clear_bindings returned error code: %d\n",status);
+	  status = sqlite3_bind_double(fitness,2,generationNumber++);
 	  if (status!=SQLITE_OK) printf("Database::insertFitnessLog sqlite3_bind_double returned error code: %d\n",status);
 	  status = sqlite3_step(fitness);
 	  if (status!=SQLITE_DONE) printf("Database::insertFitnessLog sqlite3_step returned unexpected code: %d\n",status);
