@@ -7,6 +7,7 @@
 #include <string>
 #include <cstring>
 #include <iterator>
+#include <memory>
 #include "../../sqlite/sqlite3.h"
 #include "LaminaParticle.h"
 #include "SourceParticle.h"
