@@ -2,7 +2,7 @@
 
 export CFLAGS = -O2 -march=native
 
-export GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -ffast-math -flto -fno-finite-math-only -fuse-linker-plugin
+export GCC_OPTS := -std=c++11 $(CFLAGS) -Wall -ffast-math -fno-finite-math-only
 
 all: .sqlite_built_marker lib/sim/libsim.a generator simulator viewer
 
