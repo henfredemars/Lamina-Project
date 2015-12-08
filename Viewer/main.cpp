@@ -11,12 +11,27 @@ https://en.wikibooks.org/wiki/OpenGL_Programming/
 #include "LUtil.h"
 #include <vector>
 #include <string>
+#include "../lib/sim/include/Database.h"
+#include "../lib/sim/include/Particle.h"
+#include "../lib/sim/include/LaminaParticle.h"
+#include "../lib/sim/include/SourceParticle.h"
 
 using namespace std;
 
 void runMainLoop( int val );
 
 int main( int argc, char* args[] ) {
+    
+    string filename;
+    if (argc != 2) {
+        cout << "You need to specify a valid file, using test1.db as input instead\n";
+        filename = "test1.db";
+    }
+    else {
+        string str(args[1]);
+        filename = str;
+    }
+    
     //Initialize FreeGLUT
     glutInit( &argc, args );
 
@@ -39,37 +54,15 @@ int main( int argc, char* args[] ) {
     
     //Set window resize function
     glutReshapeFunc(reshape);
+    
+    //Set mouse tracking function
+    glutPassiveMotionFunc( mouseMovement );
 
     //Set main loop
-    glutTimerFunc( 1000 / SCREEN_FPS, runMainLoop, 0 );
-    
-    //Setting the Lamina Particles vectors
-    //This is temporary
-    vector <Particles> particles_vector;
-    vector <string> statistics_vector;
-    Particles p1(0.0f, 5.0f, -15.0f, 1.0f);
-    Particles p2(6.0f, 4.0f, -10.0f, 1.0f);
-    Particles p3(-5.0f, 5.0f, -5.0f, 3.0f);
-    Particles p4(-3.0f, 5.0f, -15.0f, 1.0f);
-
-    particles_vector.push_back(p1);
-    particles_vector.push_back(p2);
-    particles_vector.push_back(p3);
-    particles_vector.push_back(p4);
-    
-    string s1 = "These are statistics for particle 1";
-    string s2 = "Particle 2's statistics";
-    string s3 = "Third particles's statistics are here";
-    string s4 = "Statistics for the 4th particle";
-    
-    statistics_vector.push_back(s1);
-    statistics_vector.push_back(s2);
-    statistics_vector.push_back(s3);
-    statistics_vector.push_back(s4);
-    
+    glutTimerFunc( 1000 / SCREEN_FPS, runMainLoop, 0 );          
     
     //Do initialization
-    if( !initGL( particles_vector , statistics_vector) ) {
+    if( !initGL( filename ) ) {
         printf( "Unable to run graphics application!\n" );
         return 1;
     }
@@ -84,7 +77,7 @@ int main( int argc, char* args[] ) {
 void runMainLoop( int val ) {
     //Rendering...
     render();
-
+    
     //Run frames every 1/60 os second
     glutTimerFunc( 1000 / SCREEN_FPS, runMainLoop, val );
 }
