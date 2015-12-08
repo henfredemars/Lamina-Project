@@ -141,7 +141,7 @@ Lamina Database::getLaminaParticlesForGeneration(const int& generationNumber) {
 	status = sqlite3_finalize(get_lamina_particles_gen);
 	get_lamina_particles_gen = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles_gen - sqlite3 NOT OK after sqlite3_finalize\n");
-	if (debug) printf("Read %d lamina particle(s) from the database.\n",particles.size());
+	if (debug) printf("Read %d lamina particle(s) from the database.\n",(int)particles.size());
 	return Lamina(particles);
 }
 
@@ -167,7 +167,7 @@ std::vector<LaminaParticle> Database::getAllLaminaParticles() {
 	status = sqlite3_finalize(get_lamina_particles);
 	get_lamina_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_lamina_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	if (debug) printf("Read %d lamina particle(s) from the database.\n",particles.size());
+	if (debug) printf("Read %d lamina particle(s) from the database.\n",(int)particles.size());
 	return particles;
 }
 
@@ -194,7 +194,7 @@ Source Database::getSourceParticles() {
 	status = sqlite3_finalize(get_source_particles);
 	get_source_particles = nullptr;
 	if (status!=SQLITE_OK) printf("get_source_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	if (debug) printf("Read %d system particle(s).\n",particles.size());
+	if (debug) printf("Read %d system particle(s).\n",(int)particles.size());
 	return Source(particles);
 }
 
@@ -262,7 +262,7 @@ void Database::insertSourceParticles(const Source& source) {
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	if (debug) printf("Wrote %d system particle(s).\n",particles.size());
+	if (debug) printf("Wrote %d system particle(s).\n",(int)particles.size());
 }
 
 void Database::insertLaminaParticles(const Lamina& lamina,const int& generationNumber) {
@@ -299,7 +299,7 @@ void Database::insertLaminaParticles(const Lamina& lamina,const int& generationN
 	status = sqlite3_finalize(insert_particles);
 	insert_particles = nullptr;
 	if (status!=SQLITE_OK) printf("insert_particles - sqlite3 NOT OK after sqlite3_finalize\n");
-	if (debug) printf("Wrote %d lamina particle(s).\n",particles.size());
+	if (debug) printf("Wrote %d lamina particle(s).\n",(int)particles.size());
 }
 
 void Database::insertFitnessLog(const std::vector<double>& v) {
