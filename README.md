@@ -3,9 +3,9 @@ Isoforce mesh optimization for computational microbiology -- Student Project in 
 
 # Licensing
 For you ease of use, the following source code dependencies have been included and are made available to you under the following licenses:
-1. Eigen math library -- MPL 2.0 copyleft license
-2. Sqlite3 -- Released into the Public Domain
-3. TCLAP -- MIT License
+0. Eigen math library -- MPL 2.0 copyleft license
+0. Sqlite3 -- Released into the Public Domain
+0. TCLAP -- MIT License
 
 All other code was written by the students and is hereby released under the MIT License. A copy of the license has been provided to you with the source directory structure. 
 
