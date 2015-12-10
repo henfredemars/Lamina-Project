@@ -21,6 +21,7 @@ make
 
 # Usage in Brief
 
+```
 ./Generator.bin  {--point|--bar|--wave} [--fib] [-n <integer>] [-f
                     <string>] [--] [--version] [-h]
 ./Simulator.bin  {--anneal|--genetic} [--endTemp <double>] [--startTemp
@@ -29,6 +30,7 @@ make
                     [--numGens <int>] [--fieldStrength <double>] [-f
                     <string>] [--] [--version] [-h]
 ./main.bin sys.db
+```
 
 For extended usage information, pass -h or --help command line arguments. 
 
