@@ -19,7 +19,7 @@ make clean
 make
 ```
 
-# Usage in Brief
+# Usage
 
 ```
 ./Generator.bin  {--point|--bar|--wave} [--fib] [-n <integer>] [-f
@@ -33,4 +33,22 @@ make
 ```
 
 For extended usage information, pass -h or --help command line arguments. 
+
+# Directory Structure
+
+* lib/ -- dependent libraries
+* test/ -- database test program
+* Viewer/ -- results visualization application
+* lib/eigen -- Eigen math library
+* lib/sim -- generation and simulation library
+* lib/sqlite -- underlying database implementation (sqlite3)
+* lib/tclap -- TCLAP: Templated Comand Line Argument Parser library
+
+# Files of Interest
+
+* AnnealingSimulation.cpp -- implements simulated annealing algorithm
+* GeneticAlgorithm.cpp -- implements genetic algorithm
+* Database.cpp -- interface to the sqlite database
+* Simulation.cpp -- simulation interface
+
 
