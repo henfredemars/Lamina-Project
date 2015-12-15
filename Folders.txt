@@ -1,4 +1,0 @@
-
-lib - libraries
-test - test code and example usage
-./ - main source of the project
